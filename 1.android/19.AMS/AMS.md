@@ -17,16 +17,14 @@ ActivityThread
 
 ApplicationThread
 
-  ApplicationThread是ActivityThread的内部类， 是一个Binder对象。在此处它是作为IApplicationThread对象的server端等待client端的请求然后进行处理，最大的client就是AMS。
-
-
-
+  ApplicationThread是ActivityThread的内部类， 是一个Binder对象。作为Activitythread和AMS通信的桥梁, ams直接通过binder调用, 会调用到ApplicationThread里, 然后通过handler发送消息, 最后在handler中也就是andorid的主线程进行四大组件的创建,生命周期的管理以及application的绑定
 
 
 #####  3.Instrumentation是什么？和ActivityThread是什么关系？
 
-
  AMS与ActivityThread之间诸如Activity的创建、暂停等的交互工作实际上是由Instrumentation具体操作的。每个Activity都持有一个Instrumentation对象的一个引用， 整个进程中是只有一个Instrumentation。mInstrumentation的初始化在ActivityThread::handleBindApplication函数。
+
+ ActivityThread 要执行创建或暂停某个Activity 的操作时，都需要通过Instrumentation 来进行具体的操
 
  可以用来独立地控制某个组件的生命周期。
 
