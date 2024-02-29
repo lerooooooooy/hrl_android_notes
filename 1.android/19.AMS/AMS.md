@@ -93,14 +93,18 @@ https://juejin.im/post/6856298463119409165#heading-10
 
 **ActivityRecord**
 
-Activity管理的最小单位，它对应着一个用户界面
+Activity管理的最小单位, 记录AndroidManifest定义的Activity属性和被调度时的状态变化，它对应着一个用户界面
 
 ActivityRecord是应用层Activity组件在AMS中的代表，每一个在应用中启动的Activity，在AMS中都有一个ActivityRecord实例来与之对应，这个ActivityRecord伴随着Activity的启动而创建，也伴随着Activity的终止而销毁。
 
 
 **TaskRecord**
 
-TaskRecord即任务栈， 每一个TaskRecord都可能存在一个或多个ActivityRecord，栈顶的ActivityRecord表示当前可见的界面。
+TaskRecord即任务栈，包含了ActivityRecord的数组mActivities, 这个类主要就对ActivityRecord进行管理, 增删改查等, 例如启动一个Activity时，通常需要将ActivityRecord压入任务栈顶 
+
+所有的ActivityRecord都必须有宿主
+
+每一个TaskRecord都可能存在一个或多个ActivityRecord，栈顶的ActivityRecord表示当前可见的界面。
 
 一个App是可能有多个TaskRecord存在的
 
@@ -111,7 +115,9 @@ TaskRecord即任务栈， 每一个TaskRecord都可能存在一个或多个Activ
 
 **ActivityStack**
 
-  ActivityStack,ActivityStack是系统中用于管理TaskRecord的,内部维护了一个ArrayList<TaskRecord>。
+  ActivityStack,ActivityStack是系统中用于管理TaskRecord和activity的状态变化(生命周期)如显示、销毁等, 内部维护了一个ArrayList<TaskRecord>。
+  
+例如启动一个处于后台的singleTask的Activity,要找到Activity所在TaskRecord就是通过ActivityStack, 并将TaskRecord所在的ActivityStack挪到前台
 
 ActivityStackSupervisor内部有两个不同的ActivityStack对象：mHomeStack、mFocusedStack，用来管理不同的任务。
 
@@ -120,6 +126,8 @@ ActivityStackSupervisor内部有两个不同的ActivityStack对象：mHomeStack�
 **ActivityStackSupervisor**
 
 ActivityStackSupervisor管理着多个ActivityStack，但当前只会有一个获取焦点(Focused)的ActivityStack;
+
+里面还有个内部类ActivityDisplay用于管理多屏显示, 不同的显示设备上可以有不同的ActivityStack
 
 AMS对象只会存在一个，在初始化的时候，会创建一个唯一的ActivityStackSupervisor对象
 
