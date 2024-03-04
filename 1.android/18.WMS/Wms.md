@@ -156,3 +156,32 @@ SurfaceFlinger分配完之后开始在Surface上绘制图像，来往其中的Bu
 
 
 <img src="../../img/wms2.png" width = "600" height = "500" alt="图片名称" align=center />
+
+**WindowManager是什么？和WMS的关系？**
+WindowManager就是用来管理Window的，实现类为WindowManagerImpl，实际工作会委托给WindowManagerGlobal类中完成。
+
+而具体的Window操作，WM会通过Binder告诉WMS，WMS做最后的真正操作Window的工作，会为这个Window分配Surface，并绘制到屏幕上。
+**Window怎样可以显示到锁屏界面**
+FLAG_SHOW_WHEN_LOCKED 
+
+**Window三种类型都存在的情况下，显示层级是怎样。**
+应用Window。对应着一个Activity，Window层级为1~99，在视图最下层。
+子Window。不能单独存在，需要附属在特定的父Window之中(如Dialog就是子Window)，Window层级为1000~1999。
+系统Window。需要声明权限才能创建的Window，比如Toast和系统状态栏，Window层级为2000-2999，处在视图最上层。
+
+**PhoneWindow什么时候被创建的？**
+Activity启动过程会执行到ActivityThread的handleLaunchActivity方法, 这里初始化了WindowManagerGlobal，也就是WindowManager实际操作Window的类, 然后会执行到performLaunchActivity中创建Activity, 里面创建了PhoneWindow
+
+**Window的添加、删除和更新过程。**
+Window的操作都是通过WindowManager来完成的，而WindowManager是一个接口，他的实现类是WindowManagerImpl，并且全部交给WindowManagerGlobal来处理
+addview: 首先创建ViewRootImpl实例, 每个Window都对应着一个ViewRootImpl, 然后调用了ViewRootImpl的setView方法,
+这个方法里会调用requestLayout方法, 进行完整的view绘制流程, 其次，会通过IWindowSession进行一次IPC调用，交给到WMS来实现Window的添加
+其中mWindowSession是一个Binder对象，相当于在客户端的代理类，对应的服务端的实现为Session，而Session就是运行在SystemServer进程中
+updateViewLayout: 更新LayoutParams, 重新调用requestLayout
+
+**Activity、PhoneWindow、DecorView、ViewRootImpl 的关系？**
+ PhoneWindow 其实是 Window 的唯一子类，是 Activity 和 View 交互系统的中间层，用来管理View的，并且在Window创建（添加）的时候就新建了ViewRootImpl实例。
+ DecorView 是整个 View 层级的最顶层，ViewRootImpl是DecorView 的parent，但是他并不是一个真正的 View，只是继承了ViewParent接口，用来掌管View的各种事件，包括requestLayout、invalidate、dispatchInputEvent 等等。
+
+ **Window中的token是什么，有什么用？**
+ 
