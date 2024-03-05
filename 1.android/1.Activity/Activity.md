@@ -20,7 +20,7 @@ http://gityuan.com/2016/03/12/start-activity/
 
 system_server进程接收到请求后，向zygote进程发送创建进程的请求；
 
-Zygote进程fork出新的子进程，即App进程；
+Zygote进程fork出新的子进程，即App进程, 并调用main方法开启消息循环；
 
 App进程，通过Binder IPC向sytem_server进程发起attachApplication请求；
 
@@ -33,14 +33,14 @@ App进程的binder线程（ApplicationThread）在收到请求后，通过handle
 
 **Activity进程内启动**
 
-  请求进程A：startActivity—(hook插入点1)
-  (AMP，ActivityManager代理对象)——>  
-      system_server进程：AMS(ActivityManagerService)
+  请求进程A：startActivity—(hook插入点1), 经过instrumentation后通过binder调用进入
+      system_server进程(ActivityManagerService, 安卓10之后为ActivityTaskManagerService)
 
    解析Activity信息、处理启动参数、scheduleLaunchActivity/mH中EXECUTE_TRANSACTION消息处理(Android P)-->
 
-  回到请求进程A：ApplicationThread --> ActivityThread -(hook插入点2)-> Activity生命周期
+  然后通过binder回到app进程的ApplicationThread, ApplicationThread向ActivityThread -(hook插入点2)的handler中发送消息执行Activity生命周期
 
+ActivityTaskManagerService：管理 Activity 和它的回退栈、任务栈的系统服务，Android 10以前是 AMS 的工作，Android 10中将部分工作从 AMS 抽离为 ATMS
 
 ![activity1](../../img/activity1.png)
 #### 2.onSaveInstanceState(),onRestoreInstanceState的掉用时机
