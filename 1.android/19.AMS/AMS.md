@@ -1,4 +1,4 @@
-
+https://www.sukaidev.top/2021/05/22/4cb0a496/
 
 ##### 1.ActivityManagerService是什么？什么时候初始化的？有什么作用？
 
@@ -22,7 +22,7 @@ ApplicationThread
 
 #####  3.Instrumentation是什么？和ActivityThread是什么关系？
 
- AMS与ActivityThread之间诸如Activity的创建、暂停等的交互工作实际上是由Instrumentation具体操作的。每个Activity都持有一个Instrumentation对象的一个引用， 整个进程中是只有一个Instrumentation。mInstrumentation的初始化在ActivityThread::handleBindApplication函数。
+用于监控应用程序与系统交互，启动 Activity 或者调用 Activity、Application 的生命周期都需要经过它的处理, AMS与ActivityThread之间诸如Activity的创建、暂停等的交互工作实际上是由Instrumentation具体操作的。每个Activity都持有一个Instrumentation对象的一个引用， 整个进程中是只有一个Instrumentation。mInstrumentation的初始化在ActivityThread::handleBindApplication函数。
 
  ActivityThread 要执行创建或暂停某个Activity 的操作时，都需要通过Instrumentation 来进行具体的操
 
