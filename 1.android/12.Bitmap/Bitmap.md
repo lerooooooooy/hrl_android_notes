@@ -37,8 +37,9 @@ densityDpi	 160	240	 320	    480	    640
 
 占用的内存 =  width * height  * 一个像素所占的内存。
 
-#### 2.getByteCount() & getAllocationByteCount()的区别
+#### 2.getByteCount() & getAllocationByteCount()的区别(图片/bitmap大小/复用)
 
+Bitmap可以复用，所以Bitmap可以放入不同的图片，当Bitmap放入更大的图片的时候，就会占用更大的内存
 
 如果被复用的Bitmap的内存比待分配内存的Bitmap大
 
