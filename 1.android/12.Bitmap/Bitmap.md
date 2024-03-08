@@ -115,6 +115,7 @@ https://blog.csdn.net/u010983881/article/details/79050209
 LruCache基于linkedHashMap, 数据按照访问顺讯进行排序, 当访问的数据项在链表中存在时，则将该数据项移动到表尾，否则在表尾新建一个数据项。当链表容量超过一定阈值，则移除表头的数据。
 
 LinkedHashMap中的accessOrder设置为true则为访问顺序，为false，则为插入顺序。
+LruCache 默认的 sizeOf() 方法返回的是 1，如果要以缓存大小而不是缓存数目来控制需要重载 sizeOf()方法
 
 写入缓存
 
