@@ -61,6 +61,10 @@ AMS作为一个中间管理员的身份，所有的provider会向它注册
 
 向AMS请求到provider之后，就可以在client和server之间自行binder通信，不需要再经过systemserver
 
+
+####  ContentProvider 接口方法运行在哪个线程中呢
+ContentProvider的onCreate()是运行在UI线程的，而query() ，insert() ，delete() ，update() 是运行在线程池中的工作线程的
+
 ####  4.ContentProvider的优点
 
 **封装**
