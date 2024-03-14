@@ -218,6 +218,8 @@ Choreographer， 编舞者。 指 对CPU/GPU绘制的指导，收到VSync信号 
 
 比如说绘制可能随时发起，封装一个Runnable丢给Choreography，下一个vsync信号来的时候，开始处理消息，然后真正的开始界面的重绘了。相当于UI绘制的节奏完全由Choreography来控制。
 
+ViewRootImpl的scheduleTraversals方法调用后, 会通过Choreographer.postCallback**发送异步消息**(postSyncBarrier), 请求请求同步vsync信号, 在下一个VSync到来时会执行TraversalRunnable-->doTraversal()--->performTraversals()-->绘制流程
+
 
 应用程序调用requestLayout发起重绘，通过Choreographer发送异步消息，请求同步vsync信号，即下一次vsync信号过来时，系统服务SurfaceFlinger在第一时间通知我们，触发UI绘制。虽然可以手动多次调用，但是在一个vsync周期内，requestLayout只会执行一次。
 
